@@ -1,0 +1,5 @@
+python-telegram-bot[job-queue]==22.5
+SignerPy==0.12.0
+aiohttp==3.11.11
+pycryptodome==3.23.0
+pytz==2024.1

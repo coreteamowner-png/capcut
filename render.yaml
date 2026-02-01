@@ -1,0 +1,11 @@
+services:
+  - type: worker
+    name: capcut-otp-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: BOT_TOKEN
+        value: 7936435325:AAHR2T6DLYu8vt5CdrDW4IK6mlw1qXKpss0
+      - key: PYTHON_VERSION
+        value: 3.11.0
