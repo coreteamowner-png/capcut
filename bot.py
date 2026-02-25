@@ -69,9 +69,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Performance settings - ULTRA FAST
-MAX_CONCURRENT_OTP = 50          # 5 concurrent OTP requests at once
+MAX_CONCURRENT_OTP = 500          # 5 concurrent OTP requests at once
 MAX_CONCURRENT_TASKS = 100       # Support 100+ concurrent tasks
-BATCH_SIZE = 100                  # Process 5 numbers at a time
+BATCH_SIZE = 500                  # Process 5 numbers at a time
 LOG_INTERVAL = 50                # Log every 5 requests
 MAX_MESSAGE_LENGTH = 4000
 REQUEST_TIMEOUT = 15             # 15 second timeout per request
@@ -328,7 +328,7 @@ class CapCutOTPSender:
         rticket = str(timestamp * 1000 + random.randint(0, 999))
         params = {
             "auto_read": "1", "account_sdk_source": "app", "unbind_exist": "35",
-            "mix_mode": "1", "mobile": encrypted_mobile, "is6Digits": "1", "type": "3132",
+            "mix_mode": "1", "mobile": encrypted_mobile, "is6Digits": "1", "type": "3537",
             "iid": config["iid"], "device_id": config["device_id"],
             "ac": config["ac"], "channel": config["channel"],
             "aid": str(config["aid"]), "app_name": config["app_name"],
@@ -358,7 +358,7 @@ class CapCutOTPSender:
             "Host": "passport16-normal-sg.capcutapi.com",
             "Connection": "keep-alive",
             "Cookie": self._build_cookie_string(cookies),
-            "lan": "en", "loc": "US", "pf": "0", "vr": "277884928", "appvr": "9.2.0",
+            "lan": "en", "loc": "ae", "pf": "0", "vr": "277884928", "appvr": "16.8.1",
             "vc": config["version_code"], "device-time": str(timestamp),
             "tdid": config["device_id"], "sign-ver": "1",
             "sign": hashlib.md5(f"{timestamp}{config['device_id']}".encode()).hexdigest(),
