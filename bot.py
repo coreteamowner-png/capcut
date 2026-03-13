@@ -67,9 +67,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Performance settings - ULTRA FAST
-MAX_CONCURRENT_OTP = 500          # 5 concurrent OTP requests at once
+MAX_CONCURRENT_OTP = 80          # 5 concurrent OTP requests at once
 MAX_CONCURRENT_TASKS = 150       # Support 100+ concurrent tasks
-BATCH_SIZE = 150                  # Process 5 numbers at a time
+BATCH_SIZE = 85                  # Process 5 numbers at a time
 LOG_INTERVAL = 100                # Log every 5 requests
 MAX_MESSAGE_LENGTH = 4000
 REQUEST_TIMEOUT = 30             # 15 second timeout per request
