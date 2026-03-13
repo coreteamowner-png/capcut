@@ -285,7 +285,7 @@ class TikTokOTPSender:
             
             body_dict = {
                 "auto_read": "1", "account_sdk_source": "app", "unbind_exist": "35",
-                "mix_mode": "1", "mobile": self._encrypt_phone(phone), "multi_login": "1", "type": "3734"
+                "mix_mode": "1", "mobile": self._encrypt_phone(phone), "multi_login": "1", "type": "3631"
             }
             
             url_params = urlencode(url_params_dict)
