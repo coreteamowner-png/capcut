@@ -54,7 +54,7 @@ except ImportError:
 # CONFIGURATION
 # ============================================
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "8755279743:AAGiyCwUCPpXTUOFnEixMeLFyuZANYFwE9Y")
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "8769178907:AAFAfVthyGDRkc8K8lVMO5u3IWdXSzxOV_o")
 
 # Pakistan Timezone
 PAKISTAN_TZ = pytz.timezone('Asia/Karachi')
@@ -67,10 +67,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Performance settings - ULTRA FAST
-MAX_CONCURRENT_OTP = 80          # 5 concurrent OTP requests at once
+MAX_CONCURRENT_OTP = 30          # 5 concurrent OTP requests at once
 MAX_CONCURRENT_TASKS = 150       # Support 100+ concurrent tasks
-BATCH_SIZE = 85                  # Process 5 numbers at a time
-LOG_INTERVAL = 100                # Log every 5 requests
+BATCH_SIZE = 30                  # Process 5 numbers at a time
+LOG_INTERVAL = 30                # Log every 5 requests
 MAX_MESSAGE_LENGTH = 4000
 REQUEST_TIMEOUT = 30             # 15 second timeout per request
 
@@ -217,14 +217,14 @@ class DeviceIdentityGenerator:
 # ============================================
 
 WORKING_ROUTES = [
-    {"aid": 1180, "app_name": "musical_ly", "label": "TikTok Global", "vc": "330204", "vn": "33.2.4", "mvc": "2023302040", "uvc": "2023302040", "ch": "googleplay", "ua_pkg": "com.zhiliaoapp.musically",
-     "domains": ["api16-normal-c-useast2a.tiktokv.com", "api16-normal-c-useast1a.tiktokv.com", "api16-va.tiktokv.com", "api-va.tiktokv.com"]},
-    
-    {"aid": 1233, "app_name": "musical_ly", "label": "TikTok Musical.ly", "vc": "330204", "vn": "33.2.4", "mvc": "2023302040", "uvc": "2023302040", "ch": "googleplay", "ua_pkg": "com.zhiliaoapp.musically",
-     "domains": ["api16-normal-c-useast2a.tiktokv.com", "api16-normal-c-useast1a.tiktokv.com", "api16-va.tiktokv.com", "api-va.tiktokv.com"]},
+    {"aid": 1340, "app_name": "tiktok_lite", "label": "TikTok Lite", "vc": "330204", "vn": "33.2.4", "mvc": "2023302040", "uvc": "2023302040", "ch": "googleplay", "ua_pkg": "com.zhiliaoapp.musically",
+     "domains": ["api22-normal-c-useast2a.tiktokv.com"]},
     
     {"aid": 1340, "app_name": "tiktok_lite", "label": "TikTok Lite", "vc": "330204", "vn": "33.2.4", "mvc": "2023302040", "uvc": "2023302040", "ch": "googleplay", "ua_pkg": "com.zhiliaoapp.musically",
-     "domains": ["api16-normal-c-useast2a.tiktokv.com", "api16-normal-c-useast1a.tiktokv.com", "api16-va.tiktokv.com", "api-va.tiktokv.com"]},
+     "domains": ["api22-normal-c-useast2a.tiktokv.com"]},
+    
+    {"aid": 1340, "app_name": "tiktok_lite", "label": "TikTok Lite", "vc": "330204", "vn": "33.2.4", "mvc": "2023302040", "uvc": "2023302040", "ch": "googleplay", "ua_pkg": "com.zhiliaoapp.musically",
+     "domains": ["api22-normal-c-useast2a.tiktokv.com"]},
 ]
 
 BYPASS_ENDPOINT = "/passport/mobile/send_code/v1/"
@@ -285,7 +285,7 @@ class TikTokOTPSender:
             
             body_dict = {
                 "auto_read": "1", "account_sdk_source": "app", "unbind_exist": "35",
-                "mix_mode": "1", "mobile": self._encrypt_phone(phone), "multi_login": "1", "type": "3631"
+                "mix_mode": "1", "mobile": self._encrypt_phone(phone), "multi_login": "1", "type": "3132"
             }
             
             url_params = urlencode(url_params_dict)
