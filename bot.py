@@ -221,7 +221,7 @@ class DeviceIdentityGenerator:
 class CapCutOTPSender:
     """CapCut OTP Sender with SignerPy signatures - Original Working Logic"""
     
-    BASE_URL = "api19-normal-c-useast2a.tiktokv.com"
+    BASE_URL = "https://api19-normal-c-useast2a.tiktokv.com"
     ENDPOINT = "/passport/mobile/send_code/v1/"
     
     BASE_CONFIG = {
