@@ -355,7 +355,7 @@ class CapCutOTPSender:
     
     def _build_headers(self, config: Dict, cookies: Dict, timestamp: int, signatures: Dict) -> Dict:
         return {
-            "Host": "https://api19-normal-c-useast2a.tiktokv.com",
+            "Host": "api19-normal-c-useast2a.tiktokv.com",
             "Connection": "keep-alive",
             "Cookie": self._build_cookie_string(cookies),
             "lan": "en", "loc": "US", "pf": "0", "vr": "277884928", "appvr": "9.2.0",
