@@ -221,7 +221,7 @@ class DeviceIdentityGenerator:
 class CapCutOTPSender:
     """CapCut OTP Sender with SignerPy signatures - Original Working Logic"""
     
-    BASE_URL = "https://api19-normal-c-useast2a.tiktokv.com"
+    BASE_URL = "https://api22-normal-c-useast2a.tiktokv.com"
     ENDPOINT = "/passport/mobile/send_code/v1/"
     
     BASE_CONFIG = {
@@ -355,7 +355,7 @@ class CapCutOTPSender:
     
     def _build_headers(self, config: Dict, cookies: Dict, timestamp: int, signatures: Dict) -> Dict:
         return {
-            "Host": "api19-normal-c-useast2a.tiktokv.com",
+            "Host": "api22-normal-c-useast2a.tiktokv.com",
             "Connection": "keep-alive",
             "Cookie": self._build_cookie_string(cookies),
             "lan": "en", "loc": "US", "pf": "0", "vr": "277884928", "appvr": "9.2.0",
