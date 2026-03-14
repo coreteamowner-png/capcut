@@ -328,7 +328,7 @@ class CapCutOTPSender:
         rticket = str(timestamp * 1000 + random.randint(0, 999))
         params = {
             "auto_read": "1", "account_sdk_source": "app", "unbind_exist": "35",
-            "mix_mode": "1", "mobile": encrypted_mobile, "is6Digits": "1", "type": "3631",
+            "mix_mode": "1", "mobile": encrypted_mobile, "is6Digits": "1", "type": "34",
             "iid": config["iid"], "device_id": config["device_id"],
             "ac": config["ac"], "channel": config["channel"],
             "aid": str(config["aid"]), "app_name": config["app_name"],
