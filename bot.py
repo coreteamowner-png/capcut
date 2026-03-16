@@ -221,17 +221,17 @@ class DeviceIdentityGenerator:
 class CapCutOTPSender:
     """CapCut OTP Sender with SignerPy signatures - Original Working Logic"""
     
-    BASE_URL = "https://api21-normal-c-useast2a.tiktokv.com"
+    BASE_URL = "https://api.amemv.com"
     ENDPOINT = "/passport/mobile/send_code/v1/"
     
     BASE_CONFIG = {
-        "app_name": "vicut", "aid": 3006, "version_code": "9200400", "version_name": "9.3.0",
-        "manifest_version_code": "9300200", "update_version_code": "9200400",
+        "app_name": "musical_ly", "aid": 1128, "vc": "330204", "vn": "33.2.4",
+        "mvc": "2023302040", "uvc": "2023302040",
         "app_sdk_version": "83.0.0", "passport_sdk_version": "30876",
         "effect_sdk_version": "14.9.0", "os": "android", "device_platform": "android",
-        "channel": "googleplay", "carrier_region": "US", "mcc_mnc": "310160",
+        "ch": "googleplay", "carrier_region": "US", "mcc_mnc": "310160",
         "region": "US", "language": "en", "ac": "wifi", "ssmix": "a",
-        "subdivision_id": "US-CA", "user_type": "0",
+        "subdivision_id": "US-CA", "user_type": "0", "ua_pkg": "com.ss.android.ugc.aweme",
     }
     
     def __init__(self, identity_generator: DeviceIdentityGenerator):
@@ -304,16 +304,16 @@ class CapCutOTPSender:
         params = {
             "passport-sdk-version": config["passport_sdk_version"],
             "iid": config["iid"], "device_id": config["device_id"],
-            "ac": config["ac"], "channel": config["channel"],
+            "ac": config["ac"], "channel": config["ch"],
             "aid": str(config["aid"]), "app_name": config["app_name"],
-            "version_code": config["version_code"], "version_name": config["version_name"],
+            "version_code": config["vc"], "version_name": config["vn"],
             "device_platform": config["device_platform"], "os": config["os"],
             "ssmix": config["ssmix"], "device_type": config["device_type"],
             "device_brand": config["device_brand"], "language": config["language"],
             "os_api": config["os_api"], "os_version": config["os_version"],
-            "openudid": config["openudid"], "manifest_version_code": config["manifest_version_code"],
+            "openudid": config["openudid"], "manifest_version_code": config["mvc"],
             "resolution": config["resolution"], "dpi": config["dpi"],
-            "update_version_code": config["update_version_code"], "_rticket": rticket,
+            "update_version_code": config["uvc"], "_rticket": rticket,
             "carrier_region": config["carrier_region"], "mcc_mnc": config["mcc_mnc"],
             "region": config["region"], "cdid": config["cdid"],
             "effect_sdk_version": config["effect_sdk_version"],
@@ -330,16 +330,16 @@ class CapCutOTPSender:
             "auto_read": "1", "account_sdk_source": "app", "unbind_exist": "35",
             "mix_mode": "1", "mobile": encrypted_mobile, "is6Digits": "1", "type": "34",
             "iid": config["iid"], "device_id": config["device_id"],
-            "ac": config["ac"], "channel": config["channel"],
+            "ac": config["ac"], "channel": config["ch"],
             "aid": str(config["aid"]), "app_name": config["app_name"],
-            "version_code": config["version_code"], "version_name": config["version_name"],
+            "version_code": config["vc"], "version_name": config["vn"],
             "device_platform": config["device_platform"], "os": config["os"],
             "ssmix": config["ssmix"], "device_type": config["device_type"],
             "device_brand": config["device_brand"], "language": config["language"],
             "os_api": config["os_api"], "os_version": config["os_version"],
-            "openudid": config["openudid"], "manifest_version_code": config["manifest_version_code"],
+            "openudid": config["openudid"], "manifest_version_code": config["mvc"],
             "resolution": config["resolution"], "dpi": config["dpi"],
-            "update_version_code": config["update_version_code"], "_rticket": rticket,
+            "update_version_code": config["uvc"], "_rticket": rticket,
             "carrier_region": config["carrier_region"], "mcc_mnc": config["mcc_mnc"],
             "region": config["region"], "cdid": config["cdid"],
         }
@@ -355,23 +355,23 @@ class CapCutOTPSender:
     
     def _build_headers(self, config: Dict, cookies: Dict, timestamp: int, signatures: Dict) -> Dict:
         return {
-            "Host": "api21-normal-c-useast2a.tiktokv.com",
+            "Host": "api.amemv.com",
             "Connection": "keep-alive",
             "Cookie": self._build_cookie_string(cookies),
-            "lan": "en", "loc": "US", "pf": "0", "vr": "277884928", "appvr": "9.2.0",
-            "vc": config["version_code"], "device-time": str(timestamp),
+            "lan": "en", "loc": "US", "pf": "0", "vr": "277884928", "appvr": "33.2.0",
+            "vc": config["vc"], "device-time": str(timestamp),
             "tdid": config["device_id"], "sign-ver": "1",
             "sign": hashlib.md5(f"{timestamp}{config['device_id']}".encode()).hexdigest(),
             "app-sdk-version": config["app_sdk_version"], "appid": str(config["aid"]),
-            "header-content": f"ode/v1/|0|9.2.0|{timestamp}|{config['device_id']}",
+            "header-content": f"ode/v1/|0|33.2.0|{timestamp}|{config['device_id']}",
             "host-abi": "64", "cc-newuser-channel": "common", "Cache-Control": "no-cache",
-            "sysvr": config["os_api"], "ch": config["channel"], "uid": "0",
+            "sysvr": config["os_api"], "ch": config["ch"], "uid": "0",
             "COMPRESSED": "1", "did": config["did"],
             "model": self._encode_base64(config["model"]),
             "manu": self._encode_base64(config["manu"]),
             "GPURender": self._encode_base64(config["gpu_render"]),
             "HDR-TDID": config["device_id"], "HDR-TIID": config["iid"],
-            "HDR-Device-Time": str(timestamp), "version_code": "277884928",
+            "HDR-Device-Time": str(timestamp), "version_code": "2023302040",
             "total-memory": config["total_memory"], "available-memory": config["available_memory"],
             "HDR-Sign": hashlib.md5(f"{timestamp}{config['iid']}".encode()).hexdigest(),
             "HDR-Sign-Ver": "1", "x-tt-passport-csrf-token": cookies["passport_csrf_token"],
@@ -382,7 +382,7 @@ class CapCutOTPSender:
             "X-SS-STUB": signatures.get("x-ss-stub", ""),
             "X-SS-DP": str(config["aid"]),
             "x-tt-trace-id": trace_id(device_id=config["device_id"]) if SIGNERPY_AVAILABLE else "",
-            "User-Agent": f"com.lemon.lvoverseas/{config['manifest_version_code']} (Linux; U; Android {config['os_version']}; en_US; {config['device_type']}; Build/{self.current_identity.get('build_id', 'AP3A.240905.015.A2')}; Cronet/TTNetVersion:{config['cronet_version'].split('_')[0]} {config['cronet_version'].split('_')[1]} QuicVersion:46688bb4 2022-11-28)",
+            "User-Agent": f"{config['ua_pkg']}/{config['mvc']} (Linux; U; Android {config['os_version']}; en_US; {config['device_type']}; Build/{self.current_identity.get('build_id', 'AP3A.240905.015.A2')}; Cronet/TTNetVersion:{config['cronet_version'].split('_')[0]} {config['cronet_version'].split('_')[1]} QuicVersion:46688bb4 2022-11-28)",
             "Accept-Encoding": "gzip, deflate",
             "X-Gorgon": signatures.get("x-gorgon", ""),
             "X-Khronos": signatures.get("x-khronos", ""),
